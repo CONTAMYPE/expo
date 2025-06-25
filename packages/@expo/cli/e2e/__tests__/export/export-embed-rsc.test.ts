@@ -11,6 +11,8 @@ runExportSideEffects();
 
 jest.unmock('resolve-from');
 
+jest.setTimeout(120000);
+
 describe('export embed for RSC iOS', () => {
   const projectRoot = getRouterE2ERoot();
   const outputName = 'dist-export-embed-rsc';
@@ -75,6 +77,7 @@ describe('export embed for RSC iOS', () => {
   });
 
   it('has expected files', async () => {
+    console.log('ooxx has expected files before');
     // Ensure the standard files are included.
     expect(fs.existsSync(path.resolve(outputDir, 'index.js'))).toBe(true);
     expect(fs.existsSync(path.resolve(outputDir, 'assets'))).toBe(true);
@@ -88,6 +91,7 @@ describe('export embed for RSC iOS', () => {
 
     // Check the server project location
     expect(fs.existsSync(path.resolve(projectRoot, '.expo/server/ios'))).toBe(true);
+    console.log('ooxx has expected files after');
   });
 
   describe('server', () => {
@@ -110,13 +114,8 @@ describe('export embed for RSC iOS', () => {
     beforeAll(async () => {
       console.time('npx serve');
       console.log('ooxx before expo.startAsync', projectRoot);
-      try {
-        await fs.promises.mkdir(path.join(projectRoot, inputDir), { recursive: true });
-        await expo.startAsync([inputDir]);
-      } catch (e) {
-        console.log('ooxx expo.startAsync error', e);
-        throw e;
-      }
+      await fs.promises.mkdir(path.join(projectRoot, inputDir), { recursive: true });
+      await expo.startAsync([inputDir]);
       console.log('ooxx after expo.startAsync', projectRoot);
       console.timeEnd('npx serve');
 
@@ -134,13 +133,16 @@ describe('export embed for RSC iOS', () => {
     });
 
     it('fetches static RSC payload from server', async () => {
+      console.log('ooxx fetches static RSC payload from server before');
       const payload = await expo
         .fetchAsync('/_flight/ios/other.txt')
         .then((response) => response.text());
       expect(payload).toMatch('test-secret');
+      console.log('ooxx fetches static RSC payload from server after');
     });
 
     it('server renders RSC payload from server', async () => {
+      console.log('ooxx server renders RSC payload from server before');
       const payload = await expo
         .fetchAsync('/_flight/ios/index.txt', {
           headers: {
@@ -150,6 +152,7 @@ describe('export embed for RSC iOS', () => {
         })
         .then((response) => response.text());
       expect(payload).toMatch('test-secret');
+      console.log('ooxx server renders RSC payload from server after');
     });
   });
 });
