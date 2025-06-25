@@ -202,6 +202,7 @@ export async function exportEmbedBundleAndAssetsAsync(
 
   const files: ExportAssetMap = new Map();
 
+  console.log('ooxx before nativeExportBundleAsync');
   try {
     const bundles = await devServer.nativeExportBundleAsync(
       exp,
@@ -226,16 +227,20 @@ export async function exportEmbedBundleAndAssetsAsync(
       }
     );
 
+    console.log('ooxx after nativeExportBundleAsync');
+
     const apiRoutesEnabled =
       devServer.isReactServerComponentsEnabled || exp.web?.output === 'server';
 
     if (apiRoutesEnabled) {
+      console.log('ooxx before exportStandaloneServerAsync');
       await exportStandaloneServerAsync(projectRoot, devServer, {
         exp,
         pkg,
         files,
         options,
       });
+      console.log('ooxx after exportStandaloneServerAsync');
     }
 
     // TODO: Remove duplicates...
