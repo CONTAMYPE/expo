@@ -17,52 +17,58 @@ describe('export embed for RSC iOS', () => {
   const outputDir = path.join(projectRoot, outputName);
 
   beforeAll(async () => {
-    await fs.promises.rm(outputDir, { force: true, recursive: true });
-    await fs.promises.rm(path.join(projectRoot, '.expo/server/ios'), {
-      force: true,
-      recursive: true,
-    });
+    try {
+      await fs.promises.rm(outputDir, { force: true, recursive: true });
+      await fs.promises.rm(path.join(projectRoot, '.expo/server/ios'), {
+        force: true,
+        recursive: true,
+      });
 
-    await executeExpoAsync(
-      projectRoot,
-      [
-        'export:embed',
-        //
-        '--entry-file',
-        resolveRelativeEntryPoint(projectRoot, { platform: 'ios' }),
-        //
-        '--bundle-output',
-        `./${outputName}/index.js`,
-        '--assets-dest',
-        outputName,
-        '--platform',
-        'ios',
-        '--dev',
-        'false',
-
-        '--sourcemap-output',
-        path.join(projectRoot, `./${outputName}/index.js.map`),
-
-        '--sourcemap-sources-root',
+      await executeExpoAsync(
         projectRoot,
-      ],
-      {
-        env: {
-          NODE_ENV: 'production',
+        [
+          'export:embed',
+          //
+          '--entry-file',
+          resolveRelativeEntryPoint(projectRoot, { platform: 'ios' }),
+          //
+          '--bundle-output',
+          `./${outputName}/index.js`,
+          '--assets-dest',
+          outputName,
+          '--platform',
+          'ios',
+          '--dev',
+          'false',
 
-          E2E_ROUTER_SRC: '01-rsc',
-          E2E_ROUTER_ASYNC: 'development',
+          '--sourcemap-output',
+          path.join(projectRoot, `./${outputName}/index.js.map`),
 
-          EXPO_USE_STATIC: 'single',
-          E2E_ROUTER_JS_ENGINE: 'hermes',
+          '--sourcemap-sources-root',
+          projectRoot,
+        ],
+        {
+          env: {
+            NODE_ENV: 'production',
 
-          E2E_RSC_ENABLED: '1',
-          E2E_CANARY_ENABLED: '1',
-          EXPO_USE_METRO_REQUIRE: '1',
-          TEST_SECRET_VALUE: 'test-secret',
-        },
-      }
-    );
+            E2E_ROUTER_SRC: '01-rsc',
+            E2E_ROUTER_ASYNC: 'development',
+
+            EXPO_USE_STATIC: 'single',
+            E2E_ROUTER_JS_ENGINE: 'hermes',
+
+            E2E_RSC_ENABLED: '1',
+            E2E_CANARY_ENABLED: '1',
+            EXPO_USE_METRO_REQUIRE: '1',
+            TEST_SECRET_VALUE: 'test-secret',
+          },
+        }
+      );
+    } catch (e) {
+      console.log('ooxx');
+      console.log(e);
+      throw e;
+    }
   });
 
   it('has expected files', async () => {
