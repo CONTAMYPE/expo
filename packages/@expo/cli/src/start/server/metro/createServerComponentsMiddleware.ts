@@ -626,6 +626,7 @@ export function createServerComponentsMiddleware(
 
               const rsc = await streamToStringAsync(pipe);
               debug('RSC Payload', { platform, input, rsc });
+              console.log('ooxx RSC Payload', { platform, input, rsc });
 
               files.set(destRscFile, {
                 contents: rsc,
@@ -635,6 +636,7 @@ export function createServerComponentsMiddleware(
             }
           })
         );
+        console.log('ooxx exportRoutesAsync after');
       } catch (e) {
         console.log('ooxx exportRoutesAsync error', e);
         throw e;
