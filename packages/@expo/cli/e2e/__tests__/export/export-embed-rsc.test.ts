@@ -109,7 +109,16 @@ describe('export embed for RSC iOS', () => {
 
     beforeAll(async () => {
       console.time('npx serve');
-      await expo.startAsync([inputDir]);
+      console.log('ooxx before expo.startAsync', projectRoot);
+      try {
+        await fs.promises.mkdir(path.join(projectRoot, inputDir), { recursive: true });
+        await expo.startAsync([inputDir]);
+      } catch (e) {
+        console.log('ooxx expo.startAsync error', e);
+        throw e;
+      }
+      console.log('ooxx after expo.startAsync', projectRoot);
+      console.timeEnd('npx serve');
 
       // Move the static file to a temporary location so we can test both static and dynamic RSC payloads.
       if (fs.existsSync(staticLocation)) {
