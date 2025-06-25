@@ -597,7 +597,7 @@ export function createServerComponentsMiddleware(
         // TODO: Rework prefetching code to use Metro runtime.
         []
       );
-      console.log('ooxx after getBuildConfig', buildConfig);
+      console.log('ooxx after getBuildConfig', JSON.stringify(buildConfig, null, 2));
 
       try {
         await Promise.all(
