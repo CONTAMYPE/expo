@@ -24,6 +24,8 @@ describe('export embed for RSC iOS', () => {
         recursive: true,
       });
 
+      console.log('ooxx before export:embed', projectRoot);
+      console.log('ooxx before export:embed cwd', process.cwd());
       await executeExpoAsync(
         projectRoot,
         [
@@ -64,6 +66,7 @@ describe('export embed for RSC iOS', () => {
           },
         }
       );
+      console.log('ooxx after export:embed');
     } catch (e) {
       console.log('ooxx');
       console.log(e);
@@ -94,6 +97,7 @@ describe('export embed for RSC iOS', () => {
     const staticLocation = path.join(serverOutput, 'client/_flight/ios/index.txt');
     const tempStaticLocation = path.join(serverOutput, 'client/_flight/ios/other.txt');
 
+    console.log('ooxx before createExpoServe', projectRoot);
     const expo = createExpoServe({
       cwd: projectRoot,
       env: {
@@ -101,6 +105,7 @@ describe('export embed for RSC iOS', () => {
         TEST_SECRET_VALUE: 'test-secret-dynamic',
       },
     });
+    console.log('ooxx after createExpoServe');
 
     beforeAll(async () => {
       console.time('npx serve');
