@@ -296,6 +296,7 @@ export async function exportEmbedBundleAndAssetsAsync(
       assets: bundles.assets,
     };
   } catch (error: any) {
+    console.log('ooxx nativeExportBundleAsync error', error);
     if (isError(error)) {
       // Log using Xcode error format so the errors are picked up by xcodebuild.
       // https://developer.apple.com/documentation/xcode/running-custom-scripts-during-a-build#Log-errors-and-warnings-from-your-script

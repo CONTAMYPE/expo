@@ -757,7 +757,9 @@ export class MetroBundlerDevServer extends BundlerDevServer {
       return processClientBoundaries(allKnownReactServerReferences);
     };
 
+    console.log('ooxx before processClientBoundaries');
     const bundle = await processClientBoundaries(serverActionReferencesInServer);
+    console.log('ooxx after processClientBoundaries');
 
     // Inject the global CSS that was imported during the server render.
     bundle.artifacts.push(...cssModules);
@@ -802,6 +804,7 @@ export class MetroBundlerDevServer extends BundlerDevServer {
     const routerOptions = exp.extra?.router;
 
     // Export the static RSC files
+    console.log('ooxx before exportRoutesAsync');
     await this.rscRenderer!.exportRoutesAsync(
       {
         platform: options.platform,
@@ -810,7 +813,7 @@ export class MetroBundlerDevServer extends BundlerDevServer {
       },
       files
     );
-
+    console.log('ooxx after exportRoutesAsync');
     // Save the SSR manifest so we can perform more replacements in the server renderer and with server actions.
     files.set(`_expo/rsc/${options.platform}/ssr-manifest.js`, {
       targetDomain: 'server',

@@ -585,49 +585,57 @@ export function createServerComponentsMiddleware(
       },
       files: ExportAssetMap
     ) {
+      console.log('ooxx before getExpoRouterRscEntriesGetterAsync');
       // TODO: When we add web SSR support, we need to extract CSS Modules / Assets from the bundler process to prevent FLOUC.
       const { getBuildConfig } = (
         await getExpoRouterRscEntriesGetterAsync({ platform, routerOptions })
       ).default;
+      console.log('ooxx after getExpoRouterRscEntriesGetterAsync');
 
       // Get all the routes to render.
       const buildConfig = await getBuildConfig!(async () =>
         // TODO: Rework prefetching code to use Metro runtime.
         []
       );
+      console.log('ooxx after getBuildConfig', buildConfig);
 
-      await Promise.all(
-        Array.from(buildConfig).map(async ({ entries }) => {
-          for (const { input, isStatic } of entries || []) {
-            if (!isStatic) {
-              debug('Skipping static export for route', { input });
-              continue;
+      try {
+        await Promise.all(
+          Array.from(buildConfig).map(async ({ entries }) => {
+            for (const { input, isStatic } of entries || []) {
+              if (!isStatic) {
+                debug('Skipping static export for route', { input });
+                continue;
+              }
+              const destRscFile = path.join('_flight', platform, encodeInput(input));
+
+              const pipe = await renderRscToReadableStream(
+                {
+                  input,
+                  method: 'GET',
+                  platform,
+                  headers: new Headers(),
+                  ssrManifest,
+                  routerOptions,
+                },
+                true
+              );
+
+              const rsc = await streamToStringAsync(pipe);
+              debug('RSC Payload', { platform, input, rsc });
+
+              files.set(destRscFile, {
+                contents: rsc,
+                targetDomain: 'client',
+                rscId: input,
+              });
             }
-            const destRscFile = path.join('_flight', platform, encodeInput(input));
-
-            const pipe = await renderRscToReadableStream(
-              {
-                input,
-                method: 'GET',
-                platform,
-                headers: new Headers(),
-                ssrManifest,
-                routerOptions,
-              },
-              true
-            );
-
-            const rsc = await streamToStringAsync(pipe);
-            debug('RSC Payload', { platform, input, rsc });
-
-            files.set(destRscFile, {
-              contents: rsc,
-              targetDomain: 'client',
-              rscId: input,
-            });
-          }
-        })
-      );
+          })
+        );
+      } catch (e) {
+        console.log('ooxx exportRoutesAsync error', e);
+        throw e;
+      }
     },
 
     middleware: createBuiltinAPIRequestHandler(
