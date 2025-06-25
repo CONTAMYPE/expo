@@ -56,6 +56,7 @@ describe('export embed for RSC iOS', () => {
           stdio: 'inherit',
           env: {
             NODE_ENV: 'production',
+            EXPO_DEBUG: '1',
 
             E2E_ROUTER_SRC: '01-rsc',
             E2E_ROUTER_ASYNC: 'development',

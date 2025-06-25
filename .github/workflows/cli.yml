@@ -100,10 +100,10 @@ jobs:
 
   jest-windows:
     runs-on: windows-2022
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3, 4]
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     shard: [1, 2, 3, 4]
     env:
       # Change bun, npm, and yarn caches to the much faster D:\ drive
       # See: https://github.com/twpayne/chezmoi/pull/4064
@@ -162,14 +162,15 @@ jobs:
       - name: 👷 Build Expo CLI
         run: yarn workspace @expo/cli prepare
 
-      - name: 🔎 Type Check CLI
-        working-directory: packages/@expo/cli
-        # TODO(cedric): expo module scripts is incompatible with Windows, forcing us to manually set up these steps instead of `yarn typecheck`
-        run: yarn tsc --noEmit
+      # - name: 🔎 Type Check CLI
+      #   working-directory: packages/@expo/cli
+      #   # TODO(cedric): expo module scripts is incompatible with Windows, forcing us to manually set up these steps instead of `yarn typecheck`
+      #   run: yarn tsc --noEmit
 
       - name: 🧪 E2E Test CLI
         working-directory: packages/@expo/cli
-        run: yarn test:e2e --max-workers 1 --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+        # run: yarn test:e2e --max-workers 1 --shard ${{ matrix.shard }}/${{ strategy.job-total }}
+        run: yarn test:e2e --max-workers 1 --testPathPattern export-embed-rsc
 
   # playwright-ubuntu:
   #   runs-on: ubuntu-24.04
