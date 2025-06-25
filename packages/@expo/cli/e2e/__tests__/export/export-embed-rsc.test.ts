@@ -52,6 +52,8 @@ describe('export embed for RSC iOS', () => {
           projectRoot,
         ],
         {
+          verbose: true,
+          stdio: 'inherit',
           env: {
             NODE_ENV: 'production',
 
