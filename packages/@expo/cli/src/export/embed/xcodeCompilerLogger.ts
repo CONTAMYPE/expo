@@ -78,7 +78,9 @@ export function logMetroErrorInXcode(projectRoot: string, error: Error | string)
 }
 
 export function logInXcode(message: string) {
+  console.log('ooxx before logInXcode', message);
   Log.log(makeXcodeCompilerLog('note', message));
+  console.log('ooxx after logInXcode', message);
 }
 
 export function warnInXcode(message: string) {
