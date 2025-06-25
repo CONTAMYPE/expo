@@ -609,6 +609,7 @@ export function createServerComponentsMiddleware(
               }
               const destRscFile = path.join('_flight', platform, encodeInput(input));
 
+              console.log('ooxx renderRscToReadableStream', input);
               const pipe = await renderRscToReadableStream(
                 {
                   input,
@@ -620,6 +621,8 @@ export function createServerComponentsMiddleware(
                 },
                 true
               );
+
+              console.log('ooxx streamToStringAsync', input);
 
               const rsc = await streamToStringAsync(pipe);
               debug('RSC Payload', { platform, input, rsc });
