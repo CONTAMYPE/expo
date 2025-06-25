@@ -4,7 +4,9 @@ export async function streamToStringAsync(stream: ReadableStream): Promise<strin
   const outs: string[] = [];
   let result: ReadableStreamReadResult<unknown>;
   do {
+    console.log('ooxx streamToStringAsync read', reader.closed);
     result = await reader.read();
+    console.log('ooxx streamToStringAsync after read', result.done);
     if (result.value) {
       if (!(result.value instanceof Uint8Array)) {
         throw new Error('Unexepected buffer type');
@@ -12,6 +14,7 @@ export async function streamToStringAsync(stream: ReadableStream): Promise<strin
       outs.push(decoder.decode(result.value, { stream: true }));
     }
   } while (!result.done);
+  console.log('ooxx streamToStringAsync after while', result.done);
   outs.push(decoder.decode());
   return outs.join('');
 }
