@@ -154,7 +154,7 @@ class FileSystemFile(file: File) : FileSystemPath(file) {
         }
         return fileInfo
       }
-      else -> throw UnableToGetInfoAsyncException("file schema is not supported")
+      else -> throw UnableToGetInfoAsyncException("file schema ${file.toURI().scheme} is not supported")
     }
   }
 }
